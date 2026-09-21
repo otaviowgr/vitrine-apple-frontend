@@ -39,7 +39,7 @@ export default function ModalOrcamentoWhatsApp({
   const painelRef = useRef<HTMLDivElement>(null);
   const focoAnteriorRef = useRef<HTMLElement | null>(null);
 
-  // createPortal so existe no cliente; sem esta guarda o SSR quebra.
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- deteccao de montagem no cliente e uma excecao reconhecida
   useEffect(() => setMontado(true), []);
 
   const buscarVendedores = useCallback(async () => {
@@ -63,12 +63,13 @@ export default function ModalOrcamentoWhatsApp({
   // da lista de vendedores até alguém abrir o modal.
   useEffect(() => {
     if (aberto && !vendedoresProp && vendedores.length === 0 && !carregando) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       void buscarVendedores();
     }
   }, [aberto, vendedoresProp, vendedores.length, carregando, buscarVendedores]);
 
   // Trava o scroll do fundo e compensa a largura da barra de rolagem,
-  // senao o conteudo da pagina "pula" ao abrir no desktop.
+  // senao o conteudo da página "pula" ao abrir no desktop.
   useEffect(() => {
     if (!aberto) return;
 
@@ -129,6 +130,7 @@ export default function ModalOrcamentoWhatsApp({
       });
       return () => cancelAnimationFrame(id);
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reseta a transicao ao fechar; sem isso a proxima abertura reaparece sem animacao
     setEntrou(false);
     focoAnteriorRef.current?.focus();
   }, [aberto]);
